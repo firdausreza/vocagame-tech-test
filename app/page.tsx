@@ -1,10 +1,5 @@
-/* Components */
-import { Counter } from "./components/Counter/Counter";
+import { redirect } from "next/navigation";
 
 export default function IndexPage() {
-  return <Counter />;
+	redirect("/auth/login");
 }
-
-export const metadata = {
-  title: "Redux Toolkit",
-};
