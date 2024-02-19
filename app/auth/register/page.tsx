@@ -33,7 +33,7 @@ const zodSchema = z
 				message: "Whitespaces are not allowed",
 			}),
 		password: z.string().min(8, {
-			message: "Username must be more than 8 characters long",
+			message: "Password must be more than 8 characters long",
 		}),
 		confirmPassword: z.string(),
 	})
