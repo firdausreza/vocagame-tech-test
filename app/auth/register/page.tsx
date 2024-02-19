@@ -11,7 +11,6 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button, Input } from "../../components/components";
 import { Swiper, SwiperSlide } from "swiper/react";
-import toast, { Toaster } from "react-hot-toast";
 
 import "swiper/css";
 import "swiper/css/pagination";
@@ -24,20 +23,42 @@ import Slide3 from "@/public/images/swiper3.webp";
 const zodSchema = z
 	.object({
 		fullname: z.string(),
-		username: z.string().min(6, {
-			message: "Username must be more than 6 characters long",
-		}),
+		username: z
+			.string()
+			.trim()
+			.min(6, {
+				message: "Username must be more than 6 characters long",
+			})
+			.refine((value) => !value.includes(" "), {
+				message: "Whitespaces are not allowed",
+			}),
 		password: z.string().min(8, {
 			message: "Username must be more than 8 characters long",
 		}),
 		confirmPassword: z.string(),
 	})
-	.superRefine(({ confirmPassword, password }, ctx) => {
+	.superRefine(({ username, confirmPassword, password }, ctx) => {
+		const usersDb: Array<User> = JSON.parse(
+			localStorage.getItem("users") || "[]"
+		);
+
 		if (confirmPassword !== password) {
 			ctx.addIssue({
 				code: "custom",
 				path: ["confirmPassword"],
 				message: "Password does not match",
+			});
+		}
+
+		const findUser = usersDb.filter(
+			(user) => user.username === username
+		)[0];
+
+		if (findUser) {
+			ctx.addIssue({
+				code: "custom",
+				path: ["username"],
+				message: "User already exist",
 			});
 		}
 	});
@@ -95,22 +116,15 @@ export default function RegisterPage() {
 			password: password,
 			confirmPassword: confirmPassword,
 		};
-		const result = zodSchema.safeParse(payload);
 		const usersDb: Array<User> = JSON.parse(
 			localStorage.getItem("users") || "[]"
 		);
+		const result = zodSchema.safeParse(payload);
 
 		if (!result.success) {
 			setErrors(result.error.format());
 			return;
 		} else {
-			if (
-				usersDb.filter((user) => user.username === payload.username)
-					.length > 0
-			) {
-				toast.error("Username already exist");
-				return;
-			}
 			const user = {
 				fullname: payload.fullname,
 				username: payload.username,
@@ -184,12 +198,12 @@ export default function RegisterPage() {
 							{errors &&
 								errors.fullname &&
 								errors.fullname._errors && (
-									<p className="text-red-500 text-sm">
+									<p className="text-red-400 text-sm font-bold">
 										{errors.fullname._errors[0]}
 									</p>
 								)}
 						</div>
-						<div id="username-input">
+						<div id="username-input" className="mt-2">
 							<Input
 								id="username"
 								type="text"
@@ -200,7 +214,7 @@ export default function RegisterPage() {
 							{errors &&
 								errors.username &&
 								errors.username._errors && (
-									<p className="text-red-500 text-sm">
+									<p className="text-red-400 text-sm font-bold">
 										{errors.username._errors[0]}
 									</p>
 								)}
@@ -216,7 +230,7 @@ export default function RegisterPage() {
 							{errors &&
 								errors.password &&
 								errors.password._errors && (
-									<p className="text-red-500 text-sm">
+									<p className="text-red-400 text-sm font-bold">
 										{errors.password._errors[0]}
 									</p>
 								)}
@@ -232,7 +246,7 @@ export default function RegisterPage() {
 							{errors &&
 								errors.confirmPassword &&
 								errors.confirmPassword._errors && (
-									<p className="text-red-500 text-sm">
+									<p className="text-red-400 text-sm font-bold">
 										{errors.confirmPassword._errors[0]}
 									</p>
 								)}
@@ -277,7 +291,6 @@ export default function RegisterPage() {
 					</Swiper>
 				</article>
 			</section>
-			<Toaster position="top-right" />
 		</section>
 	);
 }

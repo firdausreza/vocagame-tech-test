@@ -122,7 +122,10 @@ export default function ProfilePage() {
 
 			localStorage.setItem("users", JSON.stringify(newUsersDb));
 			localStorage.setItem("currentUser", JSON.stringify(editedUser));
-			toast.success("Edit profile success");
+			toast.success("Edit profile success", { duration: 3000 });
+			setTimeout(() => {
+				window.location.reload();
+			}, 3100);
 		}
 	};
 
