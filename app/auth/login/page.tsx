@@ -6,7 +6,6 @@ import { z } from "zod";
 import { Pagination, Autoplay } from "swiper/modules";
 import { currentUserSlice, useDispatch } from "@/lib/redux";
 import { useRouter } from "next/navigation";
-import toast, { Toaster } from "react-hot-toast";
 import { login } from "../../../session";
 
 import { Button, Input } from "../../components/components";
@@ -23,9 +22,15 @@ import Slide3 from "@/public/images/swiper3.webp";
 
 const zodSchema = z
 	.object({
-		username: z.string().min(6, {
-			message: "Username must be more than 6 characters long",
-		}),
+		username: z
+			.string()
+			.trim()
+			.min(6, {
+				message: "Username must be more than 6 characters long",
+			})
+			.refine((value) => !value.includes(" "), {
+				message: "Whitespaces are not allowed",
+			}),
 		password: z.string().min(8, {
 			message: "Password must be more than 8 characters long",
 		}),
@@ -51,7 +56,7 @@ const zodSchema = z
 			(user) => user.username === username
 		)[0];
 
-		if (findUser.password !== password) {
+		if (findUser && findUser.password !== password) {
 			ctx.addIssue({
 				code: "custom",
 				path: ["password"],
@@ -96,25 +101,18 @@ export default function LoginPage() {
 	const onSubmit = async (e: any) => {
 		e.preventDefault();
 
-		const result = zodSchema.safeParse({
-			username: username,
-			password: password,
-		});
 		const usersDb: Array<User> = JSON.parse(
 			localStorage.getItem("users") || "[]"
 		);
 
+		const result = zodSchema.safeParse({
+			username: username,
+			password: password,
+		});
+
 		if (!result.success) {
 			setErrors(result.error.format());
 		} else {
-			if (
-				usersDb.length < 1 ||
-				(usersDb.length > 0 &&
-					usersDb.findIndex((user) => user.username === username) < 0)
-			) {
-				toast.error("User does not exist");
-				return;
-			}
 			const user = usersDb.filter(
 				(user) => user.username === username
 			)[0];
@@ -184,7 +182,7 @@ export default function LoginPage() {
 							{errors &&
 								errors.username &&
 								errors.username._errors && (
-									<p className="text-red-500 text-sm">
+									<p className="text-red-400 text-sm font-bold">
 										{errors.username._errors[0]}
 									</p>
 								)}
@@ -200,7 +198,7 @@ export default function LoginPage() {
 							{errors &&
 								errors.password &&
 								errors.password._errors && (
-									<p className="text-red-500 text-sm">
+									<p className="text-red-400 text-sm font-bold">
 										{errors.password._errors[0]}
 									</p>
 								)}
@@ -245,7 +243,6 @@ export default function LoginPage() {
 					</Swiper>
 				</article>
 			</section>
-			<Toaster position="top-right" />
 		</section>
 	);
 }
