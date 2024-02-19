@@ -13,10 +13,12 @@ export default function Nav() {
 	const pathname = usePathname();
 
 	return (
-		<nav className="max-w-5xl lg:max-w-6xl mx-auto px-4 lg:px-0 py-4 shadow-md">
-			<Link href="/">
-				<Image src={VocaGame} alt="VocaGame Logo" width={75} />
-			</Link>
-		</nav>
+		<header className="dark:bg-gray-500">
+			<nav className="max-w-5xl lg:max-w-6xl mx-auto px-4 lg:px-0 py-4">
+				<Link href="/">
+					<Image src={VocaGame} alt="VocaGame Logo" width={75} />
+				</Link>
+			</nav>
+		</header>
 	);
 }

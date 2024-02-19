@@ -38,7 +38,7 @@ export default function Input({
 
 	return (
 		<>
-			<label htmlFor={id} className="text-sm">
+			<label htmlFor={id} className="text-sm dark:text-white">
 				{label}
 			</label>
 			<input

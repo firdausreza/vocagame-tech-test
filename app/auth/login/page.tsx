@@ -155,20 +155,20 @@ export default function LoginPage() {
 		<section className="w-full flex min-h-[100vh]">
 			<section
 				id="main-content__container"
-				className="w-full lg:w-[40%] px-4 py-12 md:px-24 md:py-24"
+				className="w-full lg:w-[40%] px-4 py-12 md:px-24 md:py-24 dark:bg-gray-600"
 			>
 				<article
 					id="main-content"
 					className="flex flex-1 flex-col justify-center h-full"
 				>
 					<Image src={VocaGame} alt="VocaGame Logo" width={250} />
-					<h3 className="text-lg sm:text-xl text-green-500 font-medium mt-4">
+					<h3 className="text-lg sm:text-xl text-green-500 dark:text-white font-medium mt-4">
 						Masuk Akun VocaGame
 					</h3>
-					<h1 className="text-2xl sm:text-4xl md:text-6xl font-bold mt-2">
+					<h1 className="text-4xl md:text-6xl font-bold mt-2">
 						Login Disini
 					</h1>
-					<p className="text-gray-600 mt-4">
+					<p className="text-gray-600 dark:text-white mt-4">
 						Masukkan username dan password anda untuk mengakses
 						platform VocaGame.
 					</p>
@@ -208,10 +208,10 @@ export default function LoginPage() {
 						<Button
 							type="submit"
 							text="Masuk"
-							customClass="w-full px-4 py-2 rounded-md bg-green-500 hover:bg-green-700 transition-colors text-white text-sm mt-4"
+							customClass={`w-full px-4 py-2 rounded-md bg-green-500 dark:bg-gray-800 hover:bg-green-700 dark:hover:bg-gray-700 transition-colors text-white text-sm mt-4`}
 						/>
 					</form>
-					<p className="text-gray-600 mt-2">
+					<p className="text-gray-600 dark:text-white mt-2">
 						Belum punya akun?{" "}
 						<span>
 							<Link
@@ -226,7 +226,7 @@ export default function LoginPage() {
 			</section>
 			<section
 				id="banner-content__container"
-				className="w-[60%] hidden lg:flex min-h-[100vh] px-4 py-12 lg:px-12 lg:py-24 bg-green-500"
+				className="w-[60%] hidden lg:flex min-h-[100vh] px-4 py-12 lg:px-12 lg:py-24 bg-green-500 dark:bg-gray-800"
 			>
 				<article
 					id="banner-content"

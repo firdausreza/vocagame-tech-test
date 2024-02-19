@@ -5,10 +5,32 @@ import { Nav } from "./components/components";
 
 /* Instruments */
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { IconMoonFilled, IconSunFilled } from "@tabler/icons-react";
+
 import "./styles/globals.css";
 
 export default function RootLayout(props: React.PropsWithChildren) {
 	const pathname = usePathname();
+	const [darkMode, setDarkMode] = useState<boolean>();
+
+	const toggleDarkMode = () => {
+		const _darkMode = !darkMode;
+		setDarkMode(_darkMode);
+		localStorage.setItem("darkMode", JSON.stringify(_darkMode));
+	};
+
+	useEffect(() => {
+		if (localStorage.getItem("darkMode")) {
+			setDarkMode(
+				JSON.parse(
+					localStorage.getItem("darkMode") || JSON.stringify(darkMode)
+				)
+			);
+		} else {
+			localStorage.setItem("darkMode", JSON.stringify(darkMode));
+		}
+	}, []);
 
 	return (
 		<Providers>
@@ -34,9 +56,21 @@ export default function RootLayout(props: React.PropsWithChildren) {
 					/>
 					<link rel="manifest" href="/site.webmanifest" />
 				</head>
-				<body>
+				<body className={`${darkMode ? "dark" : "light"} relative`}>
 					{!pathname.includes("/auth") && <Nav />}
 					<main>{props.children}</main>
+					<button
+						className={`${
+							darkMode ? "bg-white" : "bg-slate-900"
+						} rounded-full p-4 fixed bottom-5 right-5`}
+						onClick={toggleDarkMode}
+					>
+						{darkMode ? (
+							<IconSunFilled size={16} className="text-black" />
+						) : (
+							<IconMoonFilled size={16} className="text-white" />
+						)}
+					</button>
 				</body>
 			</html>
 		</Providers>
