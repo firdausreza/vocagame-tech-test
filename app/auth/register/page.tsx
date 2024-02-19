@@ -16,10 +16,10 @@ import toast, { Toaster } from "react-hot-toast";
 import "swiper/css";
 import "swiper/css/pagination";
 import "../../styles/custom-swiper.css";
-import VocaGame from "../../../public/vocagame.webp";
-import Slide1 from "../../../public/swiper1.webp";
-import Slide2 from "../../../public/swiper2.webp";
-import Slide3 from "../../../public/swiper3.webp";
+import VocaGame from "@/public/images/vocagame.webp";
+import Slide1 from "@/public/images/swiper1.webp";
+import Slide2 from "@/public/images/swiper2.webp";
+import Slide3 from "@/public/images/swiper3.webp";
 
 const zodSchema = z
 	.object({

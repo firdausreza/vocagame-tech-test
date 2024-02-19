@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 
-import VocaGame from "../../public/vocagame.webp";
+import VocaGame from "@/public/images/vocagame.webp";
 
 /* Instruments */
 
