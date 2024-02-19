@@ -16,19 +16,49 @@ import Link from "next/link";
 import "swiper/css";
 import "swiper/css/pagination";
 import "../../styles/custom-swiper.css";
-import VocaGame from "../../../public/vocagame.webp";
-import Slide1 from "../../../public/swiper1.webp";
-import Slide2 from "../../../public/swiper2.webp";
-import Slide3 from "../../../public/swiper3.webp";
+import VocaGame from "@/public/images/vocagame.webp";
+import Slide1 from "@/public/images/swiper1.webp";
+import Slide2 from "@/public/images/swiper2.webp";
+import Slide3 from "@/public/images/swiper3.webp";
 
-const zodSchema = z.object({
-	username: z
-		.string()
-		.min(6, { message: "Username must be more than 6 characters long" }),
-	password: z
-		.string()
-		.min(8, { message: "Password must be more than 8 characters long" }),
-});
+const zodSchema = z
+	.object({
+		username: z.string().min(6, {
+			message: "Username must be more than 6 characters long",
+		}),
+		password: z.string().min(8, {
+			message: "Password must be more than 8 characters long",
+		}),
+	})
+	.superRefine(({ username, password }, ctx) => {
+		const usersDb: Array<User> = JSON.parse(
+			localStorage.getItem("users") || "[]"
+		);
+
+		if (
+			usersDb.length < 1 ||
+			(usersDb.length > 0 &&
+				usersDb.findIndex((user) => user.username === username) < 0)
+		) {
+			ctx.addIssue({
+				code: "custom",
+				path: ["username"],
+				message: "User does not exist",
+			});
+		}
+
+		const findUser = usersDb.filter(
+			(user) => user.username === username
+		)[0];
+
+		if (findUser.password !== password) {
+			ctx.addIssue({
+				code: "custom",
+				path: ["password"],
+				message: "Wrong password!",
+			});
+		}
+	});
 
 export default function LoginPage() {
 	const dispatch = useDispatch();
@@ -171,7 +201,7 @@ export default function LoginPage() {
 								errors.password &&
 								errors.password._errors && (
 									<p className="text-red-500 text-sm">
-										{errors.username._errors[0]}
+										{errors.password._errors[0]}
 									</p>
 								)}
 						</div>

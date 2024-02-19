@@ -6,5 +6,7 @@ export async function middleware(request: NextRequest) {
 
 	if (!currentUser && path === "/profile") {
 		return NextResponse.redirect(new URL("/auth/login", request.url));
+	} else if (currentUser && path.includes("/auth")) {
+		return NextResponse.redirect(new URL("/profile", request.url));
 	}
 }
