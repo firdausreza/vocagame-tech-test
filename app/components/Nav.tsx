@@ -3,29 +3,20 @@
 /* Core */
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
+
+import VocaGame from "../../public/vocagame.webp";
 
 /* Instruments */
-import styles from "../styles/layout.module.css";
 
-export const Nav = () => {
-  const pathname = usePathname();
+export default function Nav() {
+	const pathname = usePathname();
 
-  return (
-    <nav className={styles.nav}>
-      <Link
-        className={`${styles.link} ${pathname === "/" ? styles.active : ""}`}
-        href="/"
-      >
-        Home
-      </Link>
-      <Link
-        className={`${styles.link} ${
-          pathname === "/verify" ? styles.active : ""
-        }`}
-        href="/verify"
-      >
-        Verify
-      </Link>
-    </nav>
-  );
-};
+	return (
+		<nav className="max-w-5xl lg:max-w-6xl mx-auto px-4 lg:px-0 py-4 shadow-md">
+			<Link href="/">
+				<Image src={VocaGame} alt="VocaGame Logo" width={75} />
+			</Link>
+		</nav>
+	);
+}
